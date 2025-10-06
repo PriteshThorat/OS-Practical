@@ -1,31 +1,42 @@
-# /d:/Projects/OS-Practical/pr11.py
-# LRU page replacement simulation for the reference string:
-# 0,1,2,3,0,1,2,3,0,1,2,3,4,5,6,7 with frame size 3
-
-def lru_page_faults(reference, capacity):
-    frames = []            # hold pages, LRU at index 0, MRU at -1
-    faults = 0
-    for i, page in enumerate(reference, 1):
-        if page in frames:
-            # hit: move page to MRU position
-            frames.remove(page)
-            frames.append(page)
-            action = "hit"
-        else:
-            # miss/fault
-            faults += 1
-            if len(frames) < capacity:
-                frames.append(page)
-            else:
-                # evict LRU (index 0)
-                frames.pop(0)
-                frames.append(page)
-            action = "fault"
-        print(f"{i:2d}: access {page} -> {action:5s} | frames = {frames}")
-    return faults
-
-if __name__ == "__main__":
-    ref_string = [0,1,2,3,0,1,2,3,0,1,2,3,4,5,6,7]
-    capacity = 3
-    faults = lru_page_faults(ref_string, capacity)
-    print(f"\nTotal page faults (LRU, frames={capacity}): {faults}")
+#include<stdio.h>
+int main(){
+int ref[]={0,1,2,3,0,1,2,3,0,1,2,3,4,5,6,7};
+int capacity=3,ref_size=16,i,j,k,faults=0,frame_count=0,found,pos;
+int frames[capacity];
+for(i=0;i<ref_size;i++){
+found=0;
+pos=-1;
+for(j=0;j<frame_count;j++){
+if(frames[j]==ref[i]){
+found=1;
+pos=j;
+break;
+}
+}
+if(found){
+int temp=frames[pos];
+for(k=pos;k<frame_count-1;k++)
+frames[k]=frames[k+1];
+frames[frame_count-1]=temp;
+printf("%2d: access %d -> hit   | frames =",i+1,ref[i]);
+}else{
+faults++;
+if(frame_count<capacity){
+frames[frame_count++]=ref[i];
+}else{
+for(k=0;k<capacity-1;k++)
+frames[k]=frames[k+1];
+frames[capacity-1]=ref[i];
+}
+printf("%2d: access %d -> fault | frames =",i+1,ref[i]);
+}
+printf(" [");
+for(j=0;j<frame_count;j++){
+printf("%d",frames[j]);
+if(j<frame_count-1)printf(", ");
+}
+printf("]\n");
+}
+printf("\nTotal page faults (LRU, frames=%d): %d\n",capacity,faults);
+return 0;
+}
