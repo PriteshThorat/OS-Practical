@@ -1,36 +1,17 @@
-# pr4.py - FCFS scheduling for given processes
-
-def fcfs(processes, arrivals=None):
-    n = len(processes)
-    if arrivals is None:
-        arrivals = [0] * n
-
-    current_time = 0
-    waiting = []
-    turnaround = []
-    completion = []
-
-    for (name, burst), arrival in zip(processes, arrivals):
-        if current_time < arrival:
-            current_time = arrival  # CPU idle until process arrives
-        wait = current_time - arrival
-        current_time += burst
-        comp = current_time
-        tat = comp - arrival
-
-        waiting.append(wait)
-        completion.append(comp)
-        turnaround.append(tat)
-
-        print(f"{name:>3}  Burst={burst:>3}  Arrival={arrival:>3}  Waiting={wait:>3}  Turnaround={tat:>3}  Completion={comp:>3}")
-
-    avg_wait = sum(waiting) / n
-    avg_tat = sum(turnaround) / n
-    print(f"\nAverage waiting time   = {avg_wait:.2f}")
-    print(f"Average turnaround time= {avg_tat:.2f}")
-
-if __name__ == "__main__":
-    processes = [("P1", 21), ("P2", 6), ("P3", 3), ("P4", 2)]
-    # All arrival times are 0 as per problem statement
-    arrivals = [0, 0, 0, 0]
-    fcfs(processes, arrivals)
+#include<stdio.h>
+int main(){
+    int n=4,bt[4]={21,6,3,2},wt[4],tat[4],i;
+    float awt=0,atat=0;
+    wt[0]=0;
+    for(i=1;i<n;i++)
+        wt[i]=wt[i-1]+bt[i-1];
+    for(i=0;i<n;i++)
+        tat[i]=wt[i]+bt[i];
+    for(i=0;i<n;i++){
+        awt+=wt[i];
+        atat+=tat[i];
+    }
+    printf("Average Waiting Time=%.2f\n",awt/n);
+    printf("Average Turnaround Time=%.2f\n",atat/n);
+    return 0;
+}
