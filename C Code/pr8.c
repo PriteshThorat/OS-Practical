@@ -1,28 +1,36 @@
 #include <stdio.h>
 #include <stdbool.h>
-#define P 5  
-#define R 3  
+#include <stdlib.h>
 int main() {
-    int alloc[P][R] = {
-        {0, 1, 0},
-        {2, 0, 0},
-        {3, 0, 2},
-        {2, 1, 1},
-        {0, 0, 2}
-    };
-    int max[P][R] = {
-        {7, 5, 3},
-        {3, 2, 2},
-        {9, 0, 2},
-        {2, 2, 2},
-        {4, 3, 3}
-    };
-    int avail[R] = {3, 3, 2};
-    int need[P][R];
-    for (int i = 0; i < P; i++)
-        for (int j = 0; j < R; j++)
+    int P, R;
+    printf("Enter number of processes: ");
+    scanf("%d", &P);
+    printf("Enter number of resources: ");
+    scanf("%d", &R);
+    int alloc[P][R], max[P][R], avail[R], need[P][R];
+    printf("Enter Allocation Matrix (%d x %d):\n", P, R);
+    for (int i = 0; i < P; i++) {
+        for (int j = 0; j < R; j++) {
+            scanf("%d", &alloc[i][j]);
+        }
+    }
+    printf("Enter Maximum Matrix (%d x %d):\n", P, R);
+    for (int i = 0; i < P; i++) {
+        for (int j = 0; j < R; j++) {
+            scanf("%d", &max[i][j]);
+        }
+    }
+    printf("Enter Available Resources (%d values):\n", R);
+    for (int j = 0; j < R; j++) {
+        scanf("%d", &avail[j]);
+    }
+    for (int i = 0; i < P; i++) {
+        for (int j = 0; j < R; j++) {
             need[i][j] = max[i][j] - alloc[i][j];
-    bool finish[P] = {false};
+        }
+    }
+    bool finish[P];
+    for (int i = 0; i < P; i++) finish[i] = false;
     int safeSeq[P];
     int count = 0;
     while (count < P) {
